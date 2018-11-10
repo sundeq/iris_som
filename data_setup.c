@@ -15,15 +15,23 @@ typedef struct
     double input[N_ATTRIBUTES];
 } iris_du;
 
+
+void init_iris_data(iris_du *idu_array[]);
 void parse_csv_line(iris_du *idu, char *line);
 void get_csv_lines(char *csv_lines[], int max_line_len, char *csv_file);
 
 int main(int argc, char *argv[])
 {
+    iris_du *idu_array[N_ENTRIES];
+    init_iris_data(idu_array);
+}
+
+void init_iris_data(iris_du *idu_array[])
+{
     int i;
     char *csv_file = "resources/iris.data";
     char *csv_lines[N_ENTRIES];
-    iris_du *idu_array[N_ENTRIES];
+    //iris_du *idu_array[N_ENTRIES];
     
     get_csv_lines(csv_lines, MAX_CSV_LINE_LEN, csv_file);
     
@@ -32,8 +40,8 @@ int main(int argc, char *argv[])
 	idu_array[i] = malloc(sizeof(iris_du));
         parse_csv_line(idu_array[i], csv_lines[i]);
     }
-
 }
+
 
 void get_csv_lines(char *csv_lines[], int max_line_len, char *csv_file)
 {
