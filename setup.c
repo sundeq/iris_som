@@ -5,6 +5,9 @@
 #include <math.h>
 #include "data_setup.h"
 
+#define LATTICE_ROWS 40
+#define LATTICE_COLS 40
+
 typedef struct
 {
     int x, y; // Coordinates in node lattice.
@@ -16,10 +19,13 @@ double euclid_dist(int n, double x[n], double y[n]);
 
 int main(int argc, char *argv[])
 {
+
+    koho_node *kn_lattice[LATTICE_ROWS*LATTICE_COLS];
+    int i, j, w;
+
     srand(time(NULL));
     koho_node *kn = init_koho_node(0, 0, N_ATTRIBUTES);
     printf("x: %d, y: %d\n", kn->x, kn->y);
-    int i;
     for (i =  0; i < N_ATTRIBUTES; i++)
         printf("w%d: %f\n", i, kn->weights[i]);
     
@@ -30,6 +36,15 @@ int main(int argc, char *argv[])
     memcpy(dtemp, idu_array[20]->input, N_ATTRIBUTES*sizeof(double));
     printf("%f %f %f %f", dtemp[1], dtemp[1], dtemp[2], dtemp[3]);
     printf("edist: %f", euclid_dist(N_ATTRIBUTES, kn->weights, dtemp));
+
+    w = 0;
+    for (i = 0; i < LATTICE_ROWS; i++)
+    {
+        for (j = 0; j < LATTICE_COLS; j++)
+	{
+	    kn_lattice[w] = init_koho_node(i, j, N_ATTRIBUTES);
+	}
+    }
 }
 
 koho_node* init_koho_node(int x, int y, int n_weights)
@@ -59,5 +74,4 @@ double euclid_dist(int n, double x[n], double y[n]){
         sum += pow(x[i] - y[i], 2.0);
     }
     return sqrt(sum);
-
 }
