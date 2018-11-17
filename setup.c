@@ -16,6 +16,7 @@ typedef struct
 
 koho_node* init_koho_node(int x, int y, int n_weights);
 double euclid_dist(int n, double x[n], double y[n]);
+double gauss_neigh_func(lr_rate, std_dev, lattice_dist);
 
 int main(int argc, char *argv[])
 {
@@ -45,6 +46,18 @@ int main(int argc, char *argv[])
 	    kn_lattice[w] = init_koho_node(i, j, N_ATTRIBUTES);
 	}
     }
+}
+
+double gauss_neigh_func(double lr_rate, double std_dev, double lattice_dist)
+{
+    double a;
+    double exp_arg;
+
+    exp_arg = ( pow(lattice_dist, 2.0) / (2 * pow(std_dev, 2.0)) );
+    a = lr_rate * exp(exp_args);
+
+    return a;
+
 }
 
 koho_node* init_koho_node(int x, int y, int n_weights)
