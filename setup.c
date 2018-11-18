@@ -17,11 +17,13 @@ typedef struct
 koho_node* init_koho_node(int x, int y, int n_weights);
 double euclid_dist(int n, double x[n], double y[n]);
 double gauss_neigh_func(lr_rate, std_dev, lattice_dist);
+void training_round(int n_weights, int n_rows, int n_cols, koho_node *kn_lattice[n_rows*n_cols],
+		    iris_du *input_example);
 
 int main(int argc, char *argv[])
 {
-
-    koho_node *kn_lattice[LATTICE_ROWS*LATTICE_COLS];
+    n_nodes = LATTICE_ROWS * LATTICE_COLS;
+    koho_node *kn_lattice[n_nodes];
     int i, j, w;
 
     srand(time(NULL));
@@ -44,6 +46,28 @@ int main(int argc, char *argv[])
         for (j = 0; j < LATTICE_COLS; j++)
 	{
 	    kn_lattice[w] = init_koho_node(i, j, N_ATTRIBUTES);
+	}
+    }
+}
+
+void training_round(int n_weights, int n_rows, int n_cols, koho_node *kn_lattice[n_rows*n_cols],
+		    iris_du *input_example)
+{
+    int i, j, w, bmu_i;
+    double tmp_dist, smallest_dist;
+
+    // Find index of BMU.
+    w = 0;
+    smallest_dist = 0.0;
+    for (i = 0; i < n_rows; i++)
+    {
+        for (j = 0; j < n_cols, j++)
+	{
+	    tmp_dist = euclid_dist(n_weights, kn_lattice[w]->weights, input_example->input);
+	    if (tmp_dist < smallest_dist)
+		    smallest_dist = tmp_dist;
+	            bmu_i = w;
+	    w++;
 	}
     }
 }
