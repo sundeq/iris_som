@@ -20,19 +20,18 @@ double gauss_neigh_func(lr_rate, std_dev, lattice_dist);
 void train(int epochs, int n_weights, int rows, int cols, koho_node *kn_lattice, iris_du *idu_array);
 void training_round(int n_weights, int n_rows, int n_cols, koho_node *kn_lattice[n_rows*n_cols],
 		    iris_du *input_example);
+void setup_koho_lattice(int n_nodes, int rows, int cols, int n_weights,
+		        koho_node *kn_lattice[n_nodes])
 
 int main(int argc, char *argv[])
 {
     n_nodes = LATTICE_ROWS * LATTICE_COLS;
-    koho_node *kn_lattice[n_nodes];
     int i, j, w;
 
-    srand(time(NULL));
-    koho_node *kn = init_koho_node(0, 0, N_ATTRIBUTES);
-    printf("x: %d, y: %d\n", kn->x, kn->y);
-    for (i =  0; i < N_ATTRIBUTES; i++)
-        printf("w%d: %f\n", i, kn->weights[i]);
+    koho_node *kn_lattice[n_nodes];
+    setup_koho_lattice(n_nodes, LATTICE_ROWS; LATTICE_COLS, N_ATTRIBUTES, kn_lattice);
     
+    /*
     iris_du *idu_array[N_ENTRIES];
     init_iris_data(idu_array);
     
@@ -47,6 +46,23 @@ int main(int argc, char *argv[])
         for (j = 0; j < LATTICE_COLS; j++)
 	{
 	    kn_lattice[w] = init_koho_node(i, j, N_ATTRIBUTES);
+	}
+    }*/
+}
+
+void setup_koho_lattice(int n_nodes, int rows, int cols, int n_weights,
+		        koho_node *kn_lattice[n_nodes])
+{
+    // Random seed
+    srand(time(NULL));
+    int i, j, w;
+    w = 0;
+    for (i = 0; i < rows, i++)
+    {
+        for (j = 0; j < cols; j++)
+	{
+	    kn_lattice[w]-> init_koho_node(i, j, n_weights);
+	    w++;
 	}
     }
 }
