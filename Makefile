@@ -1,6 +1,6 @@
 CC = gcc
 
-OBJS = main.cpp
+OBJS = setup.c
 
 OBJ_NAME = main
 
