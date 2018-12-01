@@ -5,8 +5,8 @@
 #include <math.h>
 #include "data_setup.h"
 
-#define LATTICE_ROWS 40
-#define LATTICE_COLS 40
+#define LATTICE_ROWS 4
+#define LATTICE_COLS 4
 
 typedef struct
 {
@@ -14,13 +14,13 @@ typedef struct
     double weights[N_ATTRIBUTES]; // Weights of the node.
 } koho_node;
 
-//double euclid_dist(int n, double x[n], double y[n]);
-//double gauss_neigh_func(lr_rate, std_dev, lattice_dist);
-void train(int epochs, int n_nodes, int n_weights, int rows, int cols, koho_node *kn_lattice[n_nodes], int idu_array_len, iris_du *idu_array[idu_array_len]);
-//void training_round(int n_weights, int n_rows, int n_cols, koho_node *kn_lattice[n_rows*n_cols],
-//		    iris_du *input_example);
-void setup_koho_lattice(int n_nodes, int rows, int cols, int n_weights, koho_node *kn_lattice[n_nodes]);
+
 koho_node* init_koho_node(int x, int y, int n_weights);
+void setup_koho_lattice(int n_nodes, int rows, int cols, int n_weights, koho_node *kn_lattice[n_nodes]);
+void train(int epochs, int n_nodes, int n_weights, int rows, int cols, koho_node *kn_lattice[n_nodes], int idu_array_len, iris_du *idu_array[idu_array_len]);
+double euclid_dist(int n, double x[n], double y[n]);
+void training_round(int n_weights, int n_rows, int n_cols, koho_node *kn_lattice[n_rows*n_cols], iris_du *input_example);
+//double gauss_neigh_func(lr_rate, std_dev, lattice_dist);
 
 int main(int argc, char *argv[])
 {
@@ -77,15 +77,11 @@ void train(int epochs, int n_nodes, int n_weights, int rows, int cols, koho_node
     for (i = 0; i < epochs; i++)
     {
         tmp_input_vector = idu_array[rand() % idu_array_len];
-	printf("%f %f %f %f\n", tmp_input_vector->input[0],
-			     tmp_input_vector->input[1],
-			     tmp_input_vector->input[2],
-			     tmp_input_vector->input[3]);
-        //training_round(n_weights, rows, cols, kn_lattice);
+	printf("Epoch: %d, Input Vector: %f %f %f %f\n", i+1, tmp_input_vector->input[0], tmp_input_vector->input[1], tmp_input_vector->input[2], tmp_input_vector->input[3]);
+        training_round(n_weights, rows, cols, kn_lattice, tmp_input_vector);
     }
 }
 
-/*
 void training_round(int n_weights, int n_rows, int n_cols, koho_node *kn_lattice[n_rows*n_cols],
 		    iris_du *input_example)
 {
@@ -94,30 +90,22 @@ void training_round(int n_weights, int n_rows, int n_cols, koho_node *kn_lattice
 
     // Find index of BMU.
     w = 0;
-    smallest_dist = 0.0;
+    smallest_dist = 1000; // Just set to a really large integer.
     for (i = 0; i < n_rows; i++)
     {
-        for (j = 0; j < n_cols, j++)
+        for (j = 0; j < n_cols; j++)
 	{
 	    tmp_dist = euclid_dist(n_weights, kn_lattice[w]->weights, input_example->input);
-	    if (tmp_dist < smallest_dist)
+	    if (tmp_dist < smallest_dist) {
 		    smallest_dist = tmp_dist;
 	            bmu_i = w;
+	    }
+	    printf("tmp_dist: %f, w:%d\n", tmp_dist, w);
 	    w++;
+            	    
 	}
     }
-}
-
-double gauss_neigh_func(double lr_rate, double std_dev, double lattice_dist)
-{
-    double a;
-    double exp_arg;
-
-    exp_arg = ( pow(lattice_dist, 2.0) / (2 * pow(std_dev, 2.0)) );
-    a = lr_rate * exp(exp_args);
-
-    return a;
-
+    printf("BMU index: %d\n", bmu_i);
 }
 
 double euclid_dist(int n, double x[n], double y[n])
@@ -130,4 +118,18 @@ double euclid_dist(int n, double x[n], double y[n])
         sum += pow(x[i] - y[i], 2.0);
     }
     return sqrt(sum);
-}*/
+}
+
+/*
+double gauss_neigh_func(double lr_rate, double std_dev, double lattice_dist)
+{
+    double a;
+    double exp_arg;
+
+    exp_arg = ( pow(lattice_dist, 2.0) / (2 * pow(std_dev, 2.0)) );
+    a = lr_rate * exp(exp_args);
+
+    return a;
+
+}
+*/
