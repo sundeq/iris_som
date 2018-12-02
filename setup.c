@@ -74,6 +74,11 @@ void train(int epochs, int n_nodes, int n_weights, int rows, int cols, koho_node
 {
     iris_du *tmp_input_vector; 
     int i;
+    
+    // Setup constants for neighbourhod update.
+    double original_radius = n_rows;
+    double time_constant = epochs / log(sigma_0);
+
     for (i = 0; i < epochs; i++)
     {
         tmp_input_vector = idu_array[rand() % idu_array_len];
@@ -102,10 +107,8 @@ void training_round(int n_weights, int n_rows, int n_cols, koho_node *kn_lattice
 	    }
 	    printf("tmp_dist: %f, w:%d\n", tmp_dist, w);
 	    w++;
-            	    
 	}
     }
-    printf("BMU index: %d\n", bmu_i);
 }
 
 double euclid_dist(int n, double x[n], double y[n])
@@ -118,6 +121,15 @@ double euclid_dist(int n, double x[n], double y[n])
         sum += pow(x[i] - y[i], 2.0);
     }
     return sqrt(sum);
+}
+
+/* Calculate current neighbourhood radius using exponential decay. */
+double neigbourhood_radius(int time, double original_radius, double time_constant) {
+    
+    double exp_arg;
+    
+    exp_arg = -(time / time_constant );
+    return original_radius * exp(exp_arg);	
 }
 
 /*
