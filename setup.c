@@ -75,15 +75,16 @@ void train(int epochs, int n_nodes, int n_weights, int rows, int cols, koho_node
     iris_du *tmp_input_vector; 
     int i;
     
-    // Setup constants for neighbourhod update.
+    double radius;
     double original_radius = n_rows;
     double time_constant = epochs / log(sigma_0);
 
     for (i = 0; i < epochs; i++)
-    {
+    { 
         tmp_input_vector = idu_array[rand() % idu_array_len];
+        radius = neighbourhood_radius(i, original_radius, time_constant);	
 	printf("Epoch: %d, Input Vector: %f %f %f %f\n", i+1, tmp_input_vector->input[0], tmp_input_vector->input[1], tmp_input_vector->input[2], tmp_input_vector->input[3]);
-        training_round(n_weights, rows, cols, kn_lattice, tmp_input_vector);
+        training_round(n_weights, rows, cols, kn_lattice, tmp_input_vector, radius);
     }
 }
 
@@ -109,6 +110,8 @@ void training_round(int n_weights, int n_rows, int n_cols, koho_node *kn_lattice
 	    w++;
 	}
     }
+
+
 }
 
 double euclid_dist(int n, double x[n], double y[n])
@@ -123,12 +126,35 @@ double euclid_dist(int n, double x[n], double y[n])
     return sqrt(sum);
 }
 
+void get_affected_node_indices(int n_nodes, koho_node *bmu_node, koho_node *kn_lattice[n_rows*n_cols], int node_indices[n_nodes], double neighbourhood_radius)
+{
+    int i;
+    int w;
+    double *kn;
+    double tmp_x;
+    double tmp_y;
+
+    double bmu_x = (double) bmu_node->x;
+    double bmu_y = (double) bmu_node->y;
+
+    w = 0;
+    for (i = 0; i < n_nodes; i++)
+    {
+         kn = kn_lattice[i];
+	 if (euclid_dist() < neigbourhood_radius){
+             node_indices[w] = i;
+	     w++;
+	 }
+
+    }
+}
+
 /* Calculate current neighbourhood radius using exponential decay. */
 double neigbourhood_radius(int time, double original_radius, double time_constant) {
     
     double exp_arg;
     
-    exp_arg = -(time / time_constant );
+    exp_arg = -( time / time_constant );
     return original_radius * exp(exp_arg);	
 }
 
